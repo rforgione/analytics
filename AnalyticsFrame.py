@@ -11,8 +11,16 @@ class AnalyticsFrame(pd.DataFrame):
     def apply_format(self, field, format_func):
         self._formatted[field] = self._formatted[field].apply(format_func)
 
-    def metric(self, numer, denom):
-        return self.loc[:,numer].sum() / self.loc[:,denom].sum()
+    def metric(self, numer, denom, numer_count=False, denom_count=False):
+        numer_qty = float(self[numer].sum())
+        denom_qty = float(self[denom].sum())
+
+        if numer_count:
+            numer_qty = float(len(pd.unique(self[numer])))
+        elif denom_count:
+            denom_qty = float(len(pd.unique(self[denom])))
+
+        return numer_qty / denom_qty
 
     def _formatted(self):
         return self._formatted
